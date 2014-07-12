@@ -39,7 +39,7 @@ class Main {
 
     public static void load(IndexWriter writer) throws Exception{
         /*
-          
+
           read STDIN and parse json encoded array of hashes
           [ { "field": "value" }, .. ]
 
@@ -174,7 +174,7 @@ class Main {
 
           sort subScorers
           leading_scorer = subScorers[0]
-          
+
           nextDoc() {
               doc = leading_scorer.nextDoc();
               for(;;) {
@@ -196,7 +196,7 @@ class Main {
               // and try again
               doc = leading_scorer.advance(doc);
           }
-          
+
           a few words about advance(), all advance() calls in all Scorers are supposed to return document id that is >= of
           the requested id (it is undefined behavior if called with target that is less than the current position)
 
@@ -207,7 +207,7 @@ class Main {
           possible id(lets say 90), and then tie looop will try to advance all the other scorers to 90 and so on.
 
           so you can see how jumpy it is, and how even a query with hundreds of terms can be executed very fast
-          
+
           calling score() on the boolean query will basically do
               foreach subscorer
                   score += subscorer.score()
@@ -229,7 +229,7 @@ class Main {
             int docId = hits[i].doc;
             Document doc = searcher.doc(docId);
             Explanation explain = searcher.explain(query,docId);
-            System.out.println(String.format("doc id: %d, score: %f",docId,hits[i].score)); 
+            System.out.println(String.format("doc id: %d, score: %f",docId,hits[i].score));
             System.out.println(explain);
             for (IndexableField field : doc.getFields()) {
                 System.out.println("\t" + field.name() + " : " + field.stringValue());
@@ -283,7 +283,7 @@ class Main {
         and.add(or);
 
         for (ScoreDoc s : and.search(reader,50))
-            System.out.println("and doc: " + s.doc + ", score: " + s.score);            
+            System.out.println("and doc: " + s.doc + ", score: " + s.score);
 
         reader.close();
     }
@@ -361,7 +361,7 @@ class Main {
 
             @Override
             public Query getQuery() { return NoTermQuery.this; }
-            
+
             @Override
             public float getValueForNormalization() { return 1.0f; }
 
@@ -385,7 +385,7 @@ class Main {
             @Override
             public Explanation explain(AtomicReaderContext context, int doc) throws IOException {
                 Scorer scorer = scorer(context, context.reader().getLiveDocs());
-                return new ComplexExplanation(false, 0.0f, "no matching term"); 
+                return new ComplexExplanation(false, 0.0f, "no matching term");
             }
         }
 
@@ -411,7 +411,7 @@ class Main {
             public int nextDoc() throws IOException {
                 return docsEnum.nextDoc();
             }
-  
+
             @Override
             public float score() throws IOException {
                 return 1.0f;
@@ -421,7 +421,7 @@ class Main {
             public int advance(int target) throws IOException {
                 return docsEnum.advance(target);
             }
-  
+
             @Override
             public long cost() {
                 return docsEnum.cost();
@@ -439,7 +439,7 @@ class Main {
         public int nextDoc() throws Exception {
             throw new Exception("not implemented");
         }
-  
+
         public float score() throws Exception {
             throw new Exception("not implemented");
         }
@@ -447,7 +447,7 @@ class Main {
         public int advance(int target) throws Exception {
             throw new Exception("not implemented");
         }
-  
+
         public long costAfterContextIsSet() {
             return Long.MAX_VALUE;
         }
@@ -702,7 +702,7 @@ class Main {
             num_queries = queries.size();
             heapify();
         }
- 
+
         @Override
         public final int nextDoc() throws Exception {
             if (queries.size() == 0)
@@ -721,7 +721,7 @@ class Main {
                     return doc = docID;
             }
         }
-  
+
         @Override
         public final int advance(int target) throws Exception {
             if (queries.size() == 0)
@@ -740,7 +740,7 @@ class Main {
                     return doc = docID;
             }
         }
-  
+
         @Override
         public long costAfterContextIsSet() {
             long c = 0;
@@ -776,7 +776,7 @@ class Main {
         protected ScoreDoc getSentinelObject() {
             return new ScoreDoc(Integer.MAX_VALUE, Float.NEGATIVE_INFINITY);
         }
-  
+
         @Override
         protected final boolean lessThan(ScoreDoc hitA, ScoreDoc hitB) {
             if (hitA.score == hitB.score)
